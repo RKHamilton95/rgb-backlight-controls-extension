@@ -1,0 +1,8 @@
+name: RGBBacklight
+package: rgb-backlight-controls
+version: 1.0.0
+description: Connects an Arduino based RGB Backlight controller
+author: Ryan Hamilton
+license: MIT
+url: ""
+asarUrl: ""

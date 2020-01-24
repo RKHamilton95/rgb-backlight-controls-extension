@@ -1,0 +1,20 @@
+{
+  "name": "testingExtensions",
+  "version": "1.0.0",
+  "description": "Testing an extension",
+  "main": "index.js",
+  "scripts": {
+    "install": "electron-rebuild",
+    "build": "deckboard-kit --build"
+  },
+  "author": "Ryan Hamilton",
+  "license": "MIT",
+  "dependencies": {
+    "deckboard-kit": "https://github.com/rivafarabi/deckboard-kit.git",
+    "electron": "4.0.3",
+    "serialport": "^8.0.6"
+  },
+  "devDependencies": {
+    "electron-rebuild": "^1.9.0"
+  }
+}
