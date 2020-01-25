@@ -2,12 +2,30 @@ const { Extension, log, INPUT_METHOD, PLATFORMS } = require("deckboard-kit");
 const serialPort = require("serialport");
 
 class MyExtension extends Extension {
-  constructor(serial) {
+  constructor() {
     super();
     this.name = "RGBBacklightLauncher";
-    this.serial = serial;
+    this.configs = {
+      serialPath: {
+        type: INPUT_METHOD.INPUT_TEXT,
+        name: "path",
+        descriptions: "Path to serial",
+        value: "COM4"
+      }
+    };
+    this.serial = new serialPort(
+      this.configs.serialPath.value,
+      {
+        baudRate: 9600,
+        autoOpen: true
+      },
+      function(err) {
+        if (err) {
+          return log.error("Error: ", err.message);
+        }
+      }
+    );
     this.platforms = [PLATFORMS.WINDOWS];
-    this.configs = {};
     this.inputs = [
       {
         label: "Backlight State",
@@ -28,27 +46,6 @@ class MyExtension extends Extension {
               {
                 label: "Turn ON",
                 value: "on"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        label: "RGB Color",
-        value: "rgbColorState",
-        icon: "sun",
-        fontIcon: "fab",
-        color: "#171A21",
-        type: INPUT_METHOD.INPUT_SELECT,
-        input: [
-          {
-            label: "ColorState",
-            ref: "colorState",
-            type: INPUT_METHOD.INPUT_COLOR,
-            items: [
-              {
-                label: "Change_Color",
-                value: "color"
               }
             ]
           }
@@ -78,28 +75,10 @@ class MyExtension extends Extension {
             break;
         }
         break;
-      case "rgbColorState":
-        switch (colorState) {
-          case "color":
-            this.writeSerial("COLOR");
-        }
       default:
         break;
     }
   }
 }
 
-var serial = new serialPort(
-  "COM4",
-  {
-    baudRate: 9600,
-    autoOpen: true
-  },
-  function(err) {
-    if (err) {
-      return log.error("Error: ", err.message);
-    }
-  }
-);
-
-module.exports = new MyExtension(serial);
+module.exports = new MyExtension();
