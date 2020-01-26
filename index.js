@@ -1,22 +1,25 @@
 const { Extension, log, INPUT_METHOD, PLATFORMS } = require("deckboard-kit");
 const serialPort = require("serialport");
 
-class MyExtension extends Extension {
+class RGBBacklightExtension extends Extension {
   constructor() {
     super();
     this.name = "RGBBacklightLauncher";
     this.configs = {
       serialPath: {
-        type: INPUT_METHOD.INPUT_TEXT,
+        type: "object",
         name: "path",
         descriptions: "Path to serial",
-        value: "COM4"
+        value: {
+          path: "COM3",
+          baudRate: 9600
+        }
       }
     };
     this.serial = new serialPort(
-      this.configs.serialPath.value,
+      this.configs.serialPath.value.path,
       {
-        baudRate: 9600,
+        baudRate: this.configs.serialPath.value.baudRate,
         autoOpen: true
       },
       function(err) {
@@ -55,7 +58,6 @@ class MyExtension extends Extension {
   }
 
   writeSerial(message) {
-    log.error("Inside Write Serial");
     this.serial.write(message);
   }
 
@@ -63,14 +65,11 @@ class MyExtension extends Extension {
     log.error("Execute");
     switch (action) {
       case "rgbBacklightState":
-        log.error("rgbBacklightState");
         switch (state) {
           case "off":
-            log.error("SERIAL_AT_OFF: ");
             this.writeSerial("OFF\n");
             break;
           case "on":
-            log.error("SERIAL_AT_ON: ");
             this.writeSerial("ON\n");
             break;
         }
@@ -81,4 +80,4 @@ class MyExtension extends Extension {
   }
 }
 
-module.exports = new MyExtension();
+module.exports = new RGBBacklightExtension();
